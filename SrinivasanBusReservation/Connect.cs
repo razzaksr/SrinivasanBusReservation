@@ -29,6 +29,27 @@ namespace SrinivasanBusReservation
         {
             
         }
+        public void ViewPassenger()
+        {
+            var tab = new ConsoleTable("S.No", "Passenger Name", "Age");
+            Console.WriteLine("Enter the bus id");
+            int bid = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Enter the date of journey");
+            DateTime dt = Convert.ToDateTime(Console.ReadLine());
+            Console.WriteLine(dt.Date);
+            _connection = new SqlConnection("Data Source=SRDB\\SQLEXPRESS;Initial Catalog=booking;Integrated Security=True");
+            _command = new SqlCommand("select * from passengers where bus_id=@i and doj=@d", _connection);
+            _command.Parameters.AddWithValue("@i", bid);
+            _command.Parameters.AddWithValue("@d", dt.Date);
+            _connection.Open();
+            _reader = _command.ExecuteReader();
+            while (_reader.Read())
+            {
+                tab.AddRow(_reader["sno"], _reader["name"], _reader["age"]);
+            }
+            _connection.Close();
+            tab.Write();
+        }
         public void Availability()
         {
             var tab=new ConsoleTable("Bus ID","Name","Date","Capacity","Available");
